@@ -1,10 +1,12 @@
-import express, { Application, Request, Response } from 'express';
-import cors from 'cors';
 import dotenv from 'dotenv';
-import alertsRouter from './routes/alerts';
-import { checkJwt, handleAuthError } from './middleware/auth';
 
+// CHARGER DOTENV EN PREMIER !
 dotenv.config();
+
+import cors from 'cors';
+import express, { Application, Request, Response } from 'express';
+import { handleAuthError } from './middleware/auth';
+import alertsRouter from './routes/alerts';
 
 const app: Application = express();
 const PORT = process.env.PORT || 4000;
@@ -23,11 +25,14 @@ app.get('/health', (req: Request, res: Response) => {
   });
 });
 
-app.use('/api/alerts', checkJwt, alertsRouter);
+app.use('/api/alerts', alertsRouter);
 app.use(handleAuthError);
 
 app.use((req: Request, res: Response) => {
-  res.status(404).json({ success: false, error: 'Route not found' });
+  res.status(404).json({
+    success: false,
+    error: 'Route not found',
+  });
 });
 
 app.listen(PORT, () => {
