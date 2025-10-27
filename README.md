@@ -87,6 +87,7 @@ Dans les paramètres de l'application :
 
 Créer le fichier `backend/.env` :
 
+```env
 PORT=4000
 AUTH0_AUDIENCE=https://manitty-api
 AUTH0_ISSUER_BASE_URL=https://votre-tenant.auth0.com/
@@ -94,7 +95,8 @@ NODE_ENV=development
 FRONTEND_URL=http://localhost:3000
 
 
-Créer le fichier `frontend/.env.local` :
+Créer le fichier frontend/.env.local :
+
 
 AUTH0_SECRET=<générer avec: openssl rand -hex 32>
 AUTH0_BASE_URL=http://localhost:3000
