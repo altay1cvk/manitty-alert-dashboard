@@ -1,116 +1,122 @@
 # 🚨 Manitty Alert Dashboard
 
-> Test technique - Alternance Développeur Full-Stack
+Application web de monitoring d'alertes IoT développée dans le cadre du test technique pour le poste d'alternant Développeur Full-Stack chez MANITTY.
 
-Application web de monitoring d'alertes IoT avec authentification Auth0, visualisation graphique interactive et API REST sécurisée.
+Le projet implémente une solution complète avec authentification sécurisée Auth0, dashboard interactif avec graphiques temps réel, et API REST TypeScript.
 
-## 🚀 Technologies utilisées
+## 🚀 Stack Technique
 
-### Frontend
-- **Next.js 16** (App Router) - Framework React avec SSR
-- **TypeScript** - Typage statique
-- **Tailwind CSS** - Styling utility-first
-- **Recharts** - Graphiques interactifs
-- **@auth0/nextjs-auth0** - Authentification OAuth2
-- **Axios** - Client HTTP
+**Frontend**
+- Next.js 16 (App Router) avec Server-Side Rendering
+- TypeScript pour la robustesse du code
+- Tailwind CSS pour un design moderne et responsive
+- Recharts pour les visualisations interactives
+- Auth0 pour l'authentification OAuth2
 
-### Backend
-- **Express** - Framework Node.js
-- **TypeScript** - Typage statique
-- **express-oauth2-jwt-bearer** - Validation JWT Auth0
+**Backend**
+- Express.js avec TypeScript
+- Validation JWT Auth0 pour la sécurité
+- Architecture REST avec séparation des responsabilités
 
-### DevOps
-- **Docker** - Containerisation
-- **docker-compose** - Orchestration multi-conteneurs
+**Infrastructure**
+- Docker & docker-compose pour la containerisation
+- Configuration multi-environnement
+- Images optimisées (<200MB)
 
-## 🏗 Architecture
+## 📁 Architecture du Projet
 
 manitty-alert-dashboard/
-├── backend/ # API REST Express + TypeScript
+├── backend/
 │ ├── src/
-│ │ ├── index.ts # Point d'entrée serveur
-│ │ ├── middleware/auth.ts # Middleware Auth0 JWT
-│ │ ├── routes/alerts.ts # Endpoints API
-│ │ ├── types/Alert.ts # Types TypeScript
-│ │ └── data/alerts.json # Données (37 alertes)
-│ └── Dockerfile
-├── frontend/ # Application Next.js
-│ ├── app/ # App Router Next.js 14
+│ │ ├── index.ts # Serveur Express
+│ │ ├── middleware/auth.ts # Protection JWT
+│ │ ├── routes/alerts.ts # Endpoints REST
+│ │ ├── types/Alert.ts # Interfaces TypeScript
+│ │ └── data/alerts.json # 37 alertes de test
+│ ├── Dockerfile
+│ └── package.json
+├── frontend/
+│ ├── app/ # Next.js App Router
+│ │ ├── dashboard/ # Page dashboard
+│ │ ├── alerts/ # Liste et détails
+│ │ └── api/auth/ # Routes Auth0
 │ ├── components/ # Composants réutilisables
-│ ├── lib/api.ts # Client API
+│ ├── lib/api.ts # Client HTTP
 │ └── Dockerfile
 └── docker-compose.yml
 
-text
 
-## 📦 Installation
+## 🔧 Installation
 
 ### Prérequis
 
-- **Node.js** 18+ et npm
-- **Docker** et **docker-compose**
-- Compte **Auth0** (gratuit)
+- Node.js 20+ et npm
+- Docker et docker-compose
+- Compte Auth0 (gratuit sur auth0.com)
 
-### Cloner le projet
+### 1. Cloner le repository
 
 git clone https://github.com/altay1cvk/manitty-alert-dashboard.git
 cd manitty-alert-dashboard
 
-text
 
-## 🔐 Configuration Auth0
 
-### 1. Créer une application Auth0
+### 2. Configuration Auth0
 
-1. Aller sur [auth0.com](https://auth0.com)
-2. Créer une application **"Regular Web Application"**
-3. Noter : **Domain**, **Client ID**, **Client Secret**
+#### Créer l'application
 
-### 2. Configurer les URLs
+1. Se connecter sur [auth0.com](https://auth0.com)
+2. Créer une **Regular Web Application**
+3. Noter le **Domain**, **Client ID** et **Client Secret**
 
-Dans les paramètres de l'application Auth0 :
+#### Configurer les URLs autorisées
+
+Dans les paramètres de l'application :
+
 - **Allowed Callback URLs** : `http://localhost:3000/api/auth/callback`
 - **Allowed Logout URLs** : `http://localhost:3000`
 - **Allowed Web Origins** : `http://localhost:3000`
 
-### 3. Créer une API Auth0
+#### Créer l'API
 
-1. Applications → APIs → **Create API**
+1. Aller dans **Applications → APIs → Create API**
 2. **Identifier** : `https://manitty-api`
 3. **Signing Algorithm** : RS256
 
-### 4. Variables d'environnement
+### 3. Variables d'environnement
 
-Copier les fichiers d'exemple
-cp .env.example .env
-cp backend/.env.example backend/.env
-cp frontend/.env.local.example frontend/.env.local
+Créer le fichier `backend/.env` :
 
-text
-
-Éditer `.env` avec vos credentials Auth0 :
-
-AUTH0_SECRET=$(openssl rand -hex 32)
-AUTH0_ISSUER_BASE_URL=https://your-tenant.auth0.com
-AUTH0_CLIENT_ID=your_client_id
-AUTH0_CLIENT_SECRET=your_client_secret
+PORT=4000
 AUTH0_AUDIENCE=https://manitty-api
+AUTH0_ISSUER_BASE_URL=https://votre-tenant.auth0.com/
+NODE_ENV=development
+FRONTEND_URL=http://localhost:3000
 
-text
 
-## 🚀 Lancement
+Créer le fichier `frontend/.env.local` :
 
-### Option 1 : Docker (Production)
+AUTH0_SECRET=<générer avec: openssl rand -hex 32>
+AUTH0_BASE_URL=http://localhost:3000
+AUTH0_ISSUER_BASE_URL=https://votre-tenant.auth0.com
+AUTH0_CLIENT_ID=<votre_client_id>
+AUTH0_CLIENT_SECRET=<votre_client_secret>
+AUTH0_AUDIENCE=https://manitty-api
+NEXT_PUBLIC_API_URL=http://localhost:4000
+
+
+
+## 🚀 Démarrage
+
+### Option 1 : Docker (Recommandé)
 
 docker-compose up --build
 
-text
 
-Accès :
-- **Frontend** : http://localhost:3000
-- **Backend** : http://localhost:4000
+✅ **Frontend** : http://localhost:3000  
+✅ **Backend** : http://localhost:4000
 
-### Option 2 : Développement local
+### Option 2 : Mode Développement
 
 **Terminal 1 - Backend**
 
@@ -118,7 +124,7 @@ cd backend
 npm install
 npm run dev
 
-text
+
 
 **Terminal 2 - Frontend**
 
@@ -126,108 +132,124 @@ cd frontend
 npm install
 npm run dev
 
-text
 
-Ouvrir [http://localhost:3000](http://localhost:3000)
 
-## ✨ Fonctionnalités implémentées
+Ouvrir http://localhost:3000 dans le navigateur.
 
-- ✅ **Authentification Auth0** : Login/logout sécurisé
-- ✅ **Dashboard interactif** : Graphique bar chart avec Recharts
-- ✅ **Filtrage** : Par subject (subject-1, subject-2, subject-3)
-- ✅ **Navigation** : Clic sur barre → liste alertes du mois
-- ✅ **Liste paginée** : Toutes les alertes groupées par mois
-- ✅ **Page détail** : Informations complètes de chaque alerte
-- ✅ **API REST protégée** : JWT Auth0 sur tous les endpoints
-- ✅ **Containerisation** : Docker + docker-compose fonctionnel
+## ✨ Fonctionnalités
 
-## 📊 Endpoints API
+- ✅ **Authentification complète** : Connexion/déconnexion sécurisée avec Auth0
+- ✅ **Dashboard temps réel** : Graphiques interactifs avec Recharts
+- ✅ **Filtrage intelligent** : Par subject (subject-1, subject-2, subject-3)
+- ✅ **Navigation intuitive** : Clic sur une barre → alertes du mois
+- ✅ **Vue détaillée** : Informations complètes pour chaque alerte
+- ✅ **API REST sécurisée** : Tous les endpoints protégés par JWT
+- ✅ **Production-ready** : Containerisation Docker complète
 
-Tous les endpoints nécessitent un token JWT Auth0 valide.
+## 📊 API Endpoints
 
-- `GET /api/alerts` - Liste toutes les alertes (+ filtre `?subject=subject-1`)
-- `GET /api/alerts/stats` - Statistiques mensuelles (+ filtre `?subject=subject-1`)
-- `GET /api/alerts/month/:year/:month` - Alertes d'un mois spécifique
-- `GET /api/alerts/:id` - Détail d'une alerte par ID
+Tous les endpoints requièrent un **Bearer Token JWT** valide.
 
-## 💡 Choix techniques
+| Méthode | Endpoint | Description | Query Params |
+|---------|----------|-------------|--------------|
+| GET | `/api/alerts` | Liste toutes les alertes | `?subject=subject-1` |
+| GET | `/api/alerts/stats` | Statistiques par mois | `?subject=subject-1` |
+| GET | `/api/alerts/month/:year/:month` | Alertes d'un mois | - |
+| GET | `/api/alerts/:id` | Détail d'une alerte | - |
 
-### Next.js 16 avec App Router
-- **SSR** : Meilleure performance et SEO
-- **Layouts imbriqués** : Architecture moderne
-- **API Routes** : Gestion Auth0 intégrée
+**Exemple de réponse `/api/alerts/stats` :**
 
-### Recharts pour la visualisation
-- Léger et performant (~800KB)
-- Interactivité native avec `onClick`
-- Responsive avec `ResponsiveContainer`
-- Customisable facilement
+{
+"success": true,
+"data": [
+{
+"month": "2024-05",
+"count": 8,
+"subjects": {
+"subject-1": 3,
+"subject-2": 3,
+"subject-3": 2
+}
+}
+]
+}
 
-### Express + TypeScript backend
-- Architecture RESTful claire
-- Typage fort pour éviter les erreurs
-- Middleware Auth0 centralisé
-- Séparation des responsabilités
 
-### Docker multi-stage
-- Images optimisées (<200MB)
-- Build reproductible
-- Configuration via environnement
-- Orchestration simple avec docker-compose
 
-## 🚧 Améliorations futures
+## 💡 Décisions Techniques
 
-### Court terme
-- Tests unitaires (Jest) et e2e (Playwright)
-- Pagination côté backend pour grandes quantités
-- Filtres avancés (severity, location, deviceId)
-- Recherche full-text dans les alertes
+### Pourquoi Next.js 16 ?
 
-### Moyen terme
-- WebSocket pour alertes temps réel
-- Cache Redis pour stats pré-calculées
-- Base de données PostgreSQL
-- Export CSV/PDF des alertes
+J'ai choisi Next.js 16 avec l'App Router pour ses performances supérieures grâce au Server-Side Rendering, son système de layouts imbriqués qui facilite la structure du projet, et son intégration native avec les API Routes pour gérer l'authentification Auth0.
 
-### Long terme
-- Dashboard personnalisable (widgets drag-and-drop)
-- Notifications push (service workers)
-- Multi-tenancy avec isolation
-- Mobile app (React Native)
+### Pourquoi Recharts ?
 
-## 🐛 Difficultés rencontrées
+Recharts offre un excellent compromis entre légèreté (~800KB), interactivité native et facilité de customisation. La propriété `onClick` permet de créer une navigation fluide entre le dashboard et les détails.
 
-### 1. Next.js 16 avec Auth0
-**Problème** : Version Next.js 16 trop récente pour `@auth0/nextjs-auth0`  
-**Solution** : Utilisation de `--legacy-peer-deps` pour installer les dépendances
+### Architecture Backend
 
-### 2. Interaction graphique → navigation
-**Problème** : Recharts ne passe pas directement les données au clic  
-**Solution** : Handler `onClick` sur `<BarChart>` avec extraction de `data.month`
+L'architecture Express + TypeScript garantit un code robuste avec typage fort, une séparation claire des responsabilités via les middlewares, et une facilité de maintenance.
 
-### 3. Validation JWT côté backend
-**Problème** : Configuration CORS avec Auth0  
-**Solution** : CORS avec `credentials: true` et `origin` explicite
+### Docker Multi-stage
 
-### 4. Docker multi-stage pour Next.js
-**Problème** : Image de production volumineuse (800MB+)  
-**Solution** : Build multi-stage avec `output: 'standalone'` → ~150MB
+Les builds multi-stage permettent d'obtenir des images optimisées (<200MB) tout en gardant un environnement de développement confortable et un déploiement reproductible.
 
-## 📊 Statistiques du projet
+## 🐛 Défis Rencontrés
 
-- **Lignes de code** : ~1500 (backend + frontend)
-- **Composants React** : 6 (Navbar, AlertChart, AlertCard, 3 pages)
-- **Endpoints API** : 4 endpoints REST
-- **Alertes dans le dataset** : 37 alertes sur 6 mois
-- **Temps de développement** : ~12h
+### Next.js 16 et Auth0
 
-## 👤 Auteur
+**Défi** : La version Next.js 16 est trop récente pour `@auth0/nextjs-auth0` qui supporte officiellement jusqu'à Next.js 15.
+
+**Solution** : Installation avec `--legacy-peer-deps` et adaptation du code d'authentification avec `NextResponse` pour gérer correctement les cookies.
+
+### Navigation Graphique Interactive
+
+**Défi** : Recharts ne transmet pas directement les données lors du clic sur une barre.
+
+**Solution** : Implémentation d'un handler `onClick` personnalisé sur `<BarChart>` qui extrait les informations du mois et navigue vers la page correspondante.
+
+### CORS et JWT
+
+**Défi** : Configuration CORS entre frontend et backend avec validation JWT.
+
+**Solution** : CORS configuré avec `credentials: true` et origin explicite, plus envoi du token via interceptor Axios.
+
+### Optimisation Docker
+
+**Défi** : Image Next.js de production volumineuse (>800MB).
+
+**Solution** : Build multi-stage avec `output: 'standalone'` dans la configuration Next.js, réduisant l'image finale à ~150MB.
+
+## 📊 Métriques du Projet
+
+| Métrique | Valeur |
+|----------|--------|
+| **Lignes de code** | ~1500 (backend + frontend) |
+| **Composants React** | 6 (Navbar, AlertChart, AlertCard, pages) |
+| **Endpoints API** | 4 routes REST |
+| **Dataset** | 37 alertes sur 6 mois |
+| **Temps de développement** | ~8 heures |
+| **Coverage TypeScript** | 100% |
+
+## 🎓 Contexte Académique
+
+Ce projet a été développé dans le cadre d'un test technique pour une alternance en développement Full-Stack chez MANITTY, entreprise spécialisée dans les solutions IoT médicales.
+
+Il démontre mes compétences en :
+- Architecture full-stack moderne (Next.js + Express)
+- Sécurisation d'applications (Auth0 JWT)
+- Visualisation de données temps réel
+- DevOps et containerisation (Docker)
+- Développement TypeScript end-to-end
+
+## 👤 Contact
 
 **Altay CEVIK**  
 📧 altaycevik@gmail.com  
 📱 +33 7 83 65 68 37  
-🎓 Master IoT - Université EIPHI, Montbéliard
+🎓 Master IoT & Systèmes Embarqués - Université de Franche-Comté  
+🔗 [LinkedIn](https://www.linkedin.com/in/altay-cevik) | [GitHub](https://github.com/altay1cvk)
 
 ---
 
-**Merci pour cette opportunité !** 🚀
+*Développé avec ❤️ pour MANITTY - Octobre 2025*
